@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { TaskForm } from "@/components/TaskForm";
 import { TaskGrid } from "@/components/TaskGrid";
-import { toast } from "sonner";
 
 interface Task {
   id: string;
@@ -21,12 +20,10 @@ const Index = () => {
       completed: false,
     };
     setTasks([...tasks, newTask]);
-    toast.success("Task added successfully");
   };
 
   const handleDeleteTask = (id: string) => {
     setTasks(tasks.filter((task) => task.id !== id));
-    toast.success("Task deleted successfully");
   };
 
   const handleUpdateTask = (id: string, title: string, description: string) => {
@@ -35,7 +32,6 @@ const Index = () => {
         task.id === id ? { ...task, title, description } : task
       )
     );
-    toast.success("Task updated successfully");
   };
 
   const handleToggleComplete = (id: string) => {

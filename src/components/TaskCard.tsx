@@ -61,9 +61,7 @@ export const TaskCard = ({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className={`p-6 transition-all bg-white border rounded-lg shadow-lg hover:shadow-xl ${
-        task.completed ? "bg-opacity-50" : ""
-      }`}
+      className="p-6 transition-all bg-white border rounded-lg shadow-lg hover:shadow-xl"
     >
       <div className="flex items-center gap-2 mb-4">
         <Checkbox
@@ -79,13 +77,7 @@ export const TaskCard = ({
           {task.title}
         </h3>
       </div>
-      <p
-        className={`mb-4 text-gray-600 ${
-          task.completed ? "line-through text-gray-400" : ""
-        }`}
-      >
-        {task.description}
-      </p>
+      <p className="mb-4 text-gray-600">{task.description}</p>
       <div className="flex gap-2">
         <Button
           variant="outline"

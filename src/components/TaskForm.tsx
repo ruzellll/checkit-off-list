@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
 
 interface TaskFormProps {
   onSubmit: (title: string, description: string) => void;
@@ -23,7 +22,6 @@ export const TaskForm = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) {
-      toast.error("Please enter a title");
       return;
     }
     onSubmit(title, description);
