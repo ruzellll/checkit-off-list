@@ -1,4 +1,3 @@
-import { motion, AnimatePresence } from "framer-motion";
 import { TaskCard } from "./TaskCard";
 
 interface Task {
@@ -22,26 +21,17 @@ export const TaskGrid = ({
   onToggleComplete,
 }: TaskGridProps) => {
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 animate-fade-in">
-      <AnimatePresence>
-        {tasks.map((task) => (
-          <motion.div
-            key={task.id}
-            layout
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.2 }}
-          >
-            <TaskCard
-              task={task}
-              onDelete={onDelete}
-              onUpdate={onUpdate}
-              onToggleComplete={onToggleComplete}
-            />
-          </motion.div>
-        ))}
-      </AnimatePresence>
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {tasks.map((task) => (
+        <div key={task.id}>
+          <TaskCard
+            task={task}
+            onDelete={onDelete}
+            onUpdate={onUpdate}
+            onToggleComplete={onToggleComplete}
+          />
+        </div>
+      ))}
     </div>
   );
 };
