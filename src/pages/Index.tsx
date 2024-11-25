@@ -60,9 +60,9 @@ const Index = () => {
         <div className="p-6 mb-8 bg-white border rounded-lg shadow-lg">
           <TaskForm onSubmit={handleAddTask} />
         </div>
-        <div className="flex justify-center mb-6">
+        <div className="flex justify-end mb-6">
           <Tabs defaultValue="all" onValueChange={(value) => setFilter(value as typeof filter)}>
-            <TabsList>
+            <TabsList className="[&>*]:data-[state=active]:shadow-none [&>*]:data-[state=active]:transition-none">
               <TabsTrigger value="all">All Tasks</TabsTrigger>
               <TabsTrigger value="completed">Completed</TabsTrigger>
               <TabsTrigger value="uncompleted">Uncompleted</TabsTrigger>
