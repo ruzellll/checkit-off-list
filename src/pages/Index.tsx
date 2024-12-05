@@ -12,7 +12,9 @@ interface Task {
 
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [filter, setFilter] = useState<"all" | "completed" | "uncompleted">("all");
+  const [filter, setFilter] = useState<"all" | "completed" | "uncompleted">(
+    "all"
+  );
 
   // Load tasks from localStorage when component mounts
   useEffect(() => {
@@ -64,18 +66,17 @@ const Index = () => {
   });
 
   return (
-    <div className="min-h-screen p-8 bg-[#FBE4FF]">
+    <div className="min-h-screen p-8 bg-gray-50">
       <div className="max-w-4xl mx-auto">
-        <div className="p-6 mb-8 bg-[#DCBFFF] rounded-lg shadow-lg">
+        <div className="p-6 mb-8 bg-white border rounded-lg shadow-lg">
           <TaskForm onSubmit={handleAddTask} />
         </div>
         <div className="flex justify-end mb-6">
           <Tabs
             defaultValue="all"
             onValueChange={(value) => setFilter(value as typeof filter)}
-            className="bg-[#DCBFFF] p-1 rounded-lg"
           >
-            <TabsList className="bg-[#B28DFF] [&>*]:data-[state=active]:bg-[#FBE4FF] [&>*]:data-[state=active]:text-[#B28DFF]">
+            <TabsList className="[&>*]:data-[state=active]:shadow-none [&>*]:data-[state=active]:transition-none">
               <TabsTrigger value="all">All Tasks</TabsTrigger>
               <TabsTrigger value="completed">Completed</TabsTrigger>
               <TabsTrigger value="uncompleted">Uncompleted</TabsTrigger>
