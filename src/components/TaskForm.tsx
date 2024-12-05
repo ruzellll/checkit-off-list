@@ -33,6 +33,9 @@ export const TaskForm = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 animate-fade-in">
+      <h1 className="mb-2 text-4xl font-bold tracking-tight text-center">
+        TaskHub
+      </h1>
       <div className="space-y-2">
         <Input
           placeholder="Task title"
