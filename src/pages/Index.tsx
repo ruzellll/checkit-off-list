@@ -64,18 +64,18 @@ const Index = () => {
   });
 
   return (
-    <div className="min-h-screen p-8 bg-[#666A86]">
+    <div className="min-h-screen p-8 bg-[#FBE4FF]">
       <div className="max-w-4xl mx-auto">
-        <div className="p-6 mb-8 bg-[#788AA3] rounded-lg shadow-lg">
+        <div className="p-6 mb-8 bg-[#DCBFFF] rounded-lg shadow-lg">
           <TaskForm onSubmit={handleAddTask} />
         </div>
         <div className="flex justify-end mb-6">
           <Tabs
             defaultValue="all"
             onValueChange={(value) => setFilter(value as typeof filter)}
-            className="bg-[#92B6B1] p-1 rounded-lg"
+            className="bg-[#DCBFFF] p-1 rounded-lg"
           >
-            <TabsList className="bg-[#B2C9AB] [&>*]:data-[state=active]:bg-[#E8DDB5] [&>*]:data-[state=active]:text-[#666A86]">
+            <TabsList className="bg-[#B28DFF] [&>*]:data-[state=active]:bg-[#FBE4FF] [&>*]:data-[state=active]:text-[#B28DFF]">
               <TabsTrigger value="all">All Tasks</TabsTrigger>
               <TabsTrigger value="completed">Completed</TabsTrigger>
               <TabsTrigger value="uncompleted">Uncompleted</TabsTrigger>
