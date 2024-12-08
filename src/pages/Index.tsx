@@ -76,7 +76,7 @@ const Index = () => {
             defaultValue="all"
             onValueChange={(value) => setFilter(value as typeof filter)}
           >
-            <TabsList className="[&>*]:data-[state=active]:shadow-none [&>*]:data-[state=active]:transition-none">
+            <TabsList className="bg-[#CB9DF0] [&>*]:data-[state=active]:shadow-none [&>*]:data-[state=active]:transition-none">
               <TabsTrigger value="all">All Tasks</TabsTrigger>
               <TabsTrigger value="completed">Completed</TabsTrigger>
               <TabsTrigger value="uncompleted">Uncompleted</TabsTrigger>
