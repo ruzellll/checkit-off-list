@@ -5,7 +5,6 @@ interface Task {
   title: string;
   description: string;
   completed: boolean;
-  pinned: boolean;
 }
 
 interface TaskGridProps {
@@ -13,7 +12,6 @@ interface TaskGridProps {
   onDelete: (id: string) => void;
   onUpdate: (id: string, title: string, description: string) => void;
   onToggleComplete: (id: string) => void;
-  onTogglePin: (id: string) => void;
 }
 
 export const TaskGrid = ({
@@ -21,20 +19,16 @@ export const TaskGrid = ({
   onDelete,
   onUpdate,
   onToggleComplete,
-  onTogglePin,
 }: TaskGridProps) => {
-  const unpinnedTasks = tasks.filter((task) => !task.pinned);
-
   return (
-    <div className="grid grid-cols-1 gap-4">
-      {unpinnedTasks.map((task) => (
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {tasks.map((task) => (
         <div key={task.id}>
           <TaskCard
             task={task}
             onDelete={onDelete}
             onUpdate={onUpdate}
             onToggleComplete={onToggleComplete}
-            onTogglePin={onTogglePin}
           />
         </div>
       ))}
