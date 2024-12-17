@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import { TaskForm } from "@/components/TaskForm";
 import { TaskGrid } from "@/components/TaskGrid";
-import { PinnedTasksSection } from "@/components/PinnedTasksSection";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import axios from "axios";
 
 interface Task {
@@ -12,7 +10,6 @@ interface Task {
   title: string;
   description: string;
   completed: boolean;
-  pinned: boolean;
 }
 
 const API_URL = "http://localhost:8000/api";
@@ -32,7 +29,7 @@ const Index = () => {
 
   // Add task mutation
   const addTaskMutation = useMutation({
-    mutationFn: async (newTask: Omit<Task, "id" | "completed" | "pinned">) => {
+    mutationFn: async (newTask: Omit<Task, "id" | "completed">) => {
       const response = await axios.post(`${API_URL}/tasks/`, newTask);
       return response.data;
     },
@@ -84,13 +81,6 @@ const Index = () => {
     }
   };
 
-  const handleTogglePin = (id: string) => {
-    const task = tasks.find((t: Task) => t.id === id);
-    if (task) {
-      updateTaskMutation.mutate({ id, pinned: !task.pinned });
-    }
-  };
-
   const filteredTasks = tasks.filter((task: Task) => {
     if (filter === "completed") return task.completed;
     if (filter === "uncompleted") return !task.completed;
@@ -99,47 +89,29 @@ const Index = () => {
 
   return (
     <div className="min-h-screen p-8 bg-gray-50">
-      <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel defaultSize={70} minSize={30}>
-          <div className="max-w-4xl mx-auto">
-            <div className="p-6 mb-8 bg-white border rounded-lg shadow-lg">
-              <TaskForm onSubmit={handleAddTask} />
-            </div>
-            <div className="flex justify-end mb-6">
-              <Tabs
-                defaultValue="all"
-                onValueChange={(value) => setFilter(value as typeof filter)}
-              >
-                <TabsList className="bg-[#CB9DF0] [&>*]:data-[state=active]:shadow-none [&>*]:data-[state=active]:transition-none">
-                  <TabsTrigger value="all">All Tasks</TabsTrigger>
-                  <TabsTrigger value="completed">Completed</TabsTrigger>
-                  <TabsTrigger value="uncompleted">Uncompleted</TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
-            <TaskGrid
-              tasks={filteredTasks}
-              onDelete={handleDeleteTask}
-              onUpdate={handleUpdateTask}
-              onToggleComplete={handleToggleComplete}
-              onTogglePin={handleTogglePin}
-            />
-          </div>
-        </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={30} minSize={20}>
-          <div className="p-4">
-            <h2 className="mb-4 text-xl font-semibold">Pinned Tasks</h2>
-            <PinnedTasksSection
-              tasks={tasks}
-              onDelete={handleDeleteTask}
-              onUpdate={handleUpdateTask}
-              onToggleComplete={handleToggleComplete}
-              onTogglePin={handleTogglePin}
-            />
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+      <div className="max-w-4xl mx-auto">
+        <div className="p-6 mb-8 bg-white border rounded-lg shadow-lg">
+          <TaskForm onSubmit={handleAddTask} />
+        </div>
+        <div className="flex justify-end mb-6">
+          <Tabs
+            defaultValue="all"
+            onValueChange={(value) => setFilter(value as typeof filter)}
+          >
+            <TabsList className="bg-[#CB9DF0] [&>*]:data-[state=active]:shadow-none [&>*]:data-[state=active]:transition-none">
+              <TabsTrigger value="all">All Tasks</TabsTrigger>
+              <TabsTrigger value="completed">Completed</TabsTrigger>
+              <TabsTrigger value="uncompleted">Uncompleted</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+        <TaskGrid
+          tasks={filteredTasks}
+          onDelete={handleDeleteTask}
+          onUpdate={handleUpdateTask}
+          onToggleComplete={handleToggleComplete}
+        />
+      </div>
     </div>
   );
 };
