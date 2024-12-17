@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { TaskForm } from "@/components/TaskForm";
 import { TaskGrid } from "@/components/TaskGrid";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 
 interface Task {
   id: string;
@@ -10,56 +12,76 @@ interface Task {
   completed: boolean;
 }
 
+const API_URL = "http://localhost:8000/api";
+
 const Index = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [filter, setFilter] = useState<"all" | "completed" | "uncompleted">(
-    "all"
-  );
+  const [filter, setFilter] = useState<"all" | "completed" | "uncompleted">("all");
+  const queryClient = useQueryClient();
 
-  // Load tasks from localStorage when component mounts
-  useEffect(() => {
-    const savedTasks = localStorage.getItem("tasks");
-    if (savedTasks) {
-      setTasks(JSON.parse(savedTasks));
-    }
-  }, []);
+  // Fetch tasks
+  const { data: tasks = [] } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: async () => {
+      const response = await axios.get(`${API_URL}/tasks/`);
+      return response.data;
+    },
+  });
 
-  // Save tasks to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+  // Add task mutation
+  const addTaskMutation = useMutation({
+    mutationFn: async (newTask: Omit<Task, "id" | "completed">) => {
+      const response = await axios.post(`${API_URL}/tasks/`, newTask);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
+  // Update task mutation
+  const updateTaskMutation = useMutation({
+    mutationFn: async ({
+      id,
+      ...updates
+    }: Partial<Task> & { id: string }) => {
+      const response = await axios.put(`${API_URL}/tasks/${id}/`, updates);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
+  // Delete task mutation
+  const deleteTaskMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await axios.delete(`${API_URL}/tasks/${id}/`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
 
   const handleAddTask = (title: string, description: string) => {
-    const newTask: Task = {
-      id: crypto.randomUUID(),
-      title,
-      description,
-      completed: false,
-    };
-    setTasks([...tasks, newTask]);
+    addTaskMutation.mutate({ title, description });
   };
 
   const handleDeleteTask = (id: string) => {
-    setTasks(tasks.filter((task) => task.id !== id));
+    deleteTaskMutation.mutate(id);
   };
 
   const handleUpdateTask = (id: string, title: string, description: string) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, title, description } : task
-      )
-    );
+    updateTaskMutation.mutate({ id, title, description });
   };
 
   const handleToggleComplete = (id: string) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
+    const task = tasks.find((t: Task) => t.id === id);
+    if (task) {
+      updateTaskMutation.mutate({ id, completed: !task.completed });
+    }
   };
 
-  const filteredTasks = tasks.filter((task) => {
+  const filteredTasks = tasks.filter((task: Task) => {
     if (filter === "completed") return task.completed;
     if (filter === "uncompleted") return !task.completed;
     return true;
